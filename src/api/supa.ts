@@ -8,10 +8,21 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Create a single instance of the Supabase client
-export const db = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    storageKey: 'myanexa-auth',
-    storage: window.localStorage,
-  },
-}); 
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+
+export function getSupabaseClient() {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        storageKey: 'myanexa-auth',
+        storage: window.localStorage,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    });
+  }
+  return supabaseInstance;
+}
+
+export const db = getSupabaseClient(); 

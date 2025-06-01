@@ -8,12 +8,23 @@ import { Dashboard as AdminDashboard } from './pages/admin/Dashboard';
 import { Dashboard as EmployerDashboard } from './pages/employer/Dashboard';
 import { Login } from './pages/Login';
 import { ErrorBoundary } from './components/ErrorBoundary';
-// ... import other layouts and pages as needed ...
+import { useAuth } from './hooks/useAuth';
+
+// Root route component to handle initial routing
+function RootRoute() {
+  const { user, role } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Navigate to={`/${role?.toLowerCase()}/dashboard`} replace />;
+}
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Login />,
+    element: <RootRoute />,
     errorElement: <ErrorBoundary />,
   },
   {

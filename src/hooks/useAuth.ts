@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../api/supa';
+import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 export type UserRole = 'admin' | 'employer' | 'employee';
 
@@ -15,6 +16,7 @@ interface User {
 
 interface AuthState {
   user: User | null;
+  role: UserRole | null;
   isLoading: boolean;
   error: Error | null;
 }
@@ -22,6 +24,7 @@ interface AuthState {
 export function useAuth() {
   const [state, setState] = useState<AuthState>({
     user: null,
+    role: null,
     isLoading: true,
     error: null,
   });
@@ -39,11 +42,11 @@ export function useAuth() {
     init();
 
     // Listen for auth changes
-    const { data: { subscription } } = db.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = db.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
       if (event === 'SIGNED_IN' && session?.user?.id) {
         await fetchUserProfile(session.user.id);
       } else if (event === 'SIGNED_OUT') {
-        setState({ user: null, isLoading: false, error: null });
+        setState({ user: null, role: null, isLoading: false, error: null });
         navigate('/login');
       }
     });
@@ -72,12 +75,14 @@ export function useAuth() {
           lastName: profile.lastName,
           employerId: profile.employerId,
         },
+        role: profile.role,
         isLoading: false,
         error: null,
       });
     } catch (err) {
       setState({
         user: null,
+        role: null,
         isLoading: false,
         error: err instanceof Error ? err : new Error('Failed to fetch user profile'),
       });
