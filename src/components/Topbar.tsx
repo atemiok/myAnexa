@@ -1,8 +1,7 @@
-import * as React from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 export function Topbar() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div className="bg-white shadow">

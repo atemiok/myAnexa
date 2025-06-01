@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import RequireAuth from './guards/RequireAuth';
-import EmployeeLayout from './layouts/EmployeeLayout';
+import { EmployeeLayout } from './layouts/EmployeeLayout';
 import { Dashboard as EmployeeDashboard, RequestAdvance, History } from './employee';
 // ... import other layouts and pages as needed ...
 

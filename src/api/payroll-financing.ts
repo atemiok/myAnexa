@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { createPayrollFinancing, getPayrollFinancing, getPayrollFinancingByCompany } from '../db/queries';
 import { createResponse, createErrorResponse, validateRequest } from './utils';
 import { requireRole } from './middleware';
-import type { PayrollFinancing, PayrollStatus } from '../types/database';
+import type { PayrollFinancing } from '../types/database';
 
 // Validation schemas
 const createPayrollFinancingSchema = z.object({

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { usePayrollFinancing, PayrollFinancingData } from '../../hooks/employer/usePayrollFinancing';
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
@@ -6,6 +6,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
 export function PayrollFinancing() {
   const { data, isLoading } = usePayrollFinancing();
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [selected, setSelected] = useState<string>('');
 
   if (isLoading || !data) {
     return <div>Loading...</div>;
@@ -64,7 +65,7 @@ export function PayrollFinancing() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Select Range</label>
-                <Listbox value={settings.minAmount} onChange={() => {}}>
+                <Listbox value={selected} onChange={setSelected}>
                   <div className="relative mt-1">
                     <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left border focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                       <span className="block truncate">${settings.minAmount} - ${settings.maxAmount}</span>

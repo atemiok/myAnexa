@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useEmployerDashboard, ActiveRequest } from '../../hooks/employer/useEmployerDashboard';
 import { ChartCard } from '../../components/ChartCard';
 import { StatusPill } from '../../components/StatusPill';

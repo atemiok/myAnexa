@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar, Topbar } from '../components';
 import {
@@ -19,7 +18,7 @@ const routes = [
   { path: '/admin/settings', label: 'Settings', icon: Cog6ToothIcon, roles: ['admin'] },
 ];
 
-export default function AdminLayout() {
+export function AdminLayout() {
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar items={routes} />

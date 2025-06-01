@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 import { useChangeRequests, ChangeRequestStatus, ChangeRequestType } from '../../hooks/admin/useChangeRequests';
 import { StatusPill } from '../../components/StatusPill';
@@ -6,7 +5,6 @@ import { StatusPill } from '../../components/StatusPill';
 export function ChangeRequests() {
   const [status, setStatus] = useState<ChangeRequestStatus | undefined>();
   const [type, setType] = useState<ChangeRequestType | undefined>();
-
   const { data, isLoading } = useChangeRequests(status, type);
 
   if (isLoading || !data) {

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { createTransaction, getTransaction } from '../db/queries';
 import { createResponse, createErrorResponse, validateRequest } from './utils';
 import { requireRole } from './middleware';
-import type { Transaction, TransactionType, TransactionStatus } from '../types/database';
+import type { Transaction } from '../types/database';
 
 // Validation schemas
 const createTransactionSchema = z.object({

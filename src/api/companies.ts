@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { createCompany, getCompany } from '../db/queries';
 import { createResponse, createErrorResponse, validateRequest } from './utils';
 import { requireRole } from './middleware';
-import type { Company, CompanyStatus } from '../types/database';
+import type { Company } from '../types/database';
 
 // Validation schemas
 const createCompanySchema = z.object({

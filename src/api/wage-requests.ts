@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { createWageRequest, getWageRequest, getWageRequestsByEmployee } from '../db/queries';
+import { createWageRequest, getWageRequest, getWageRequestsByEmployee, getEmployee } from '../db/queries';
 import { createResponse, createErrorResponse, validateRequest } from './utils';
 import { requireRole } from './middleware';
-import type { WageRequest, WageRequestStatus } from '../types/database';
+import type { WageRequest } from '../types/database';
 
 // Validation schemas
 const createWageRequestSchema = z.object({
@@ -22,19 +22,17 @@ export async function handleRequest(request: Request) {
 
     // GET /api/wage-requests/:id
     if (method === 'GET' && url.pathname.match(/^\/api\/wage-requests\/[^/]+$/)) {
-      // Require admin, employer, or employee role
       const user = await requireRole(['admin', 'employer', 'employee'])(request);
-      
       const id = url.pathname.split('/').pop()!;
-      const request = await getWageRequest(id);
+      const wageRequest = await getWageRequest(id);
       
-      if (!request) {
+      if (!wageRequest) {
         return createErrorResponse(new Error('Wage request not found'), 404);
       }
 
       // If employee, only allow access to their own requests
       if (user.user_metadata?.role === 'employee') {
-        const employee = await getEmployee(request.employee_id);
+        const employee = await getEmployee(wageRequest.employee_id);
         if (employee?.auth_id !== user.id) {
           return createErrorResponse(new Error('Access denied'), 403);
         }
@@ -42,20 +40,18 @@ export async function handleRequest(request: Request) {
 
       // If employer, only allow access to requests from their company
       if (user.user_metadata?.role === 'employer') {
-        const employee = await getEmployee(request.employee_id);
+        const employee = await getEmployee(wageRequest.employee_id);
         if (employee?.company_id !== user.user_metadata?.company_id) {
           return createErrorResponse(new Error('Access denied'), 403);
         }
       }
 
-      return createResponse(request);
+      return createResponse(wageRequest);
     }
 
     // GET /api/wage-requests/employee/:employeeId
     if (method === 'GET' && url.pathname.match(/^\/api\/wage-requests\/employee\/[^/]+$/)) {
-      // Require admin, employer, or employee role
       const user = await requireRole(['admin', 'employer', 'employee'])(request);
-      
       const employeeId = url.pathname.split('/').pop()!;
 
       // If employee, only allow access to their own requests
@@ -80,9 +76,7 @@ export async function handleRequest(request: Request) {
 
     // POST /api/wage-requests
     if (method === 'POST' && url.pathname === '/api/wage-requests') {
-      // Require employee role
       const user = await requireRole(['employee'])(request);
-      
       const body = await request.json();
       const data = validateRequest(createWageRequestSchema, body);
 
@@ -92,8 +86,8 @@ export async function handleRequest(request: Request) {
         return createErrorResponse(new Error('Access denied'), 403);
       }
 
-      const request = await createWageRequest(data);
-      return createResponse(request, 201);
+      const wageRequest = await createWageRequest(data);
+      return createResponse(wageRequest, 201);
     }
 
     return createErrorResponse(new Error('Not found'), 404);

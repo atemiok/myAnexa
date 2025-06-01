@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import { z } from 'zod';
 import { testConnection } from './db/client';
 
 // Environment variables

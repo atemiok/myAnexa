@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useHistory } from '../hooks/employee/useHistory';
 import { StatusPill } from '../components/StatusPill';
 import { EmployeeHistoryItem } from '../hooks/employee/useHistory';

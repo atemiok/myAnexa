@@ -1,11 +1,15 @@
-import { supabase } from './config';
+import { Pool } from 'pg';
+import { dbConfig } from './config';
+
+// Create a new pool instance
+export const pool = new Pool(dbConfig);
 
 // Test the connection
 async function testConnection() {
   try {
-    const { data, error } = await supabase.from('companies').select('count').limit(1);
-    if (error) throw error;
+    const client = await pool.connect();
     console.log('Successfully connected to the database');
+    client.release();
     return true;
   } catch (error) {
     console.error('Error connecting to the database:', error);
@@ -13,5 +17,5 @@ async function testConnection() {
   }
 }
 
-// Export the test function
+// Export the pool and test function
 export { testConnection }; 

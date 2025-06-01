@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../api/supa';
-import { Session } from '@supabase/supabase-js';
 
 export type UserRole = 'admin' | 'employer' | 'employee';
 

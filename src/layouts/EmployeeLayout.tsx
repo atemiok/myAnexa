@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar, Topbar } from '../components';
 import {
@@ -15,7 +14,7 @@ const routes = [
   { path: '/employee/settings', label: 'Settings', icon: Cog6ToothIcon, roles: ['employee'] },
 ];
 
-export default function EmployeeLayout() {
+export function EmployeeLayout() {
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar items={routes} />

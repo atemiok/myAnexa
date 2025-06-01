@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { createEmployee, getEmployee, getEmployeesByCompany } from '../db/queries';
 import { createResponse, createErrorResponse, validateRequest } from './utils';
 import { requireRole } from './middleware';
-import type { Employee, EmployeeStatus } from '../types/database';
+import type { Employee } from '../types/database';
 
 // Validation schemas
 const createEmployeeSchema = z.object({
