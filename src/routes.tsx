@@ -7,13 +7,14 @@ import { Dashboard as EmployeeDashboard, RequestAdvance, History } from './emplo
 import { Dashboard as AdminDashboard } from './pages/admin/Dashboard';
 import { Dashboard as EmployerDashboard } from './pages/employer/Dashboard';
 import { Login } from './pages/Login';
-import { NotFound } from './pages/NotFound';
+import { ErrorBoundary } from './components/ErrorBoundary';
 // ... import other layouts and pages as needed ...
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <Login />,
+    errorElement: <ErrorBoundary />,
   },
   {
     path: '/employee',
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
         <EmployeeLayout />
       </RequireAuth>
     ),
+    errorElement: <ErrorBoundary />,
     children: [
       { index: true, element: <EmployeeDashboard /> },
       { path: 'dashboard', element: <EmployeeDashboard /> },
@@ -36,6 +38,7 @@ export const router = createBrowserRouter([
         <AdminLayout />
       </RequireAuth>
     ),
+    errorElement: <ErrorBoundary />,
     children: [
       { index: true, element: <AdminDashboard /> },
       { path: 'dashboard', element: <AdminDashboard /> },
@@ -48,6 +51,7 @@ export const router = createBrowserRouter([
         <EmployerLayout />
       </RequireAuth>
     ),
+    errorElement: <ErrorBoundary />,
     children: [
       { index: true, element: <EmployerDashboard /> },
       { path: 'dashboard', element: <EmployerDashboard /> },
@@ -55,7 +59,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <NotFound />,
+    element: <ErrorBoundary />,
   },
   // ... other routes ...
 ]); 
