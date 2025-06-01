@@ -1,0 +1,23 @@
+{
+  "name": "myanexa-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.0",
+  "devDependencies": {
+    "tsx": "4.7.0",
+    "typescript": "^5.8.3",
+    "zod": "3.22.4"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.8",
+    "@types/pg": "^8.15.2",
+    "pg": "^8.16.0"
+  }
+}

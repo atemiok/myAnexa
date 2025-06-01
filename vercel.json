@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/admin/**", "destination": "/" },
+    { "source": "/employer/**", "destination": "/" },
+    { "source": "/employee/**", "destination": "/" }
+  ],
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "pnpm install"
+} 
