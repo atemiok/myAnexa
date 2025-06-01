@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import RequireAuth from './guards/RequireAuth';
 import { EmployeeLayout } from './layouts/EmployeeLayout';
 import { AdminLayout } from './layouts/AdminLayout';
@@ -17,6 +17,11 @@ export const router = createBrowserRouter([
     errorElement: <ErrorBoundary />,
   },
   {
+    path: '/login',
+    element: <Login />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
     path: '/employee',
     element: (
       <RequireAuth role="employee">
@@ -25,7 +30,7 @@ export const router = createBrowserRouter([
     ),
     errorElement: <ErrorBoundary />,
     children: [
-      { index: true, element: <EmployeeDashboard /> },
+      { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <EmployeeDashboard /> },
       { path: 'request', element: <RequestAdvance /> },
       { path: 'history', element: <History /> },
@@ -40,7 +45,7 @@ export const router = createBrowserRouter([
     ),
     errorElement: <ErrorBoundary />,
     children: [
-      { index: true, element: <AdminDashboard /> },
+      { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <AdminDashboard /> },
     ],
   },
@@ -53,7 +58,7 @@ export const router = createBrowserRouter([
     ),
     errorElement: <ErrorBoundary />,
     children: [
-      { index: true, element: <EmployerDashboard /> },
+      { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <EmployerDashboard /> },
     ],
   },

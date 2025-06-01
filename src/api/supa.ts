@@ -7,4 +7,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const db = createClient(supabaseUrl, supabaseAnonKey); 
+// Create a single instance of the Supabase client
+export const db = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    storageKey: 'myanexa-auth',
+    storage: window.localStorage,
+  },
+}); 
