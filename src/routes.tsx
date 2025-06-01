@@ -77,5 +77,4 @@ export const router = createBrowserRouter([
     path: '*',
     element: <ErrorBoundary />,
   },
-  // ... other routes ...
 ]); 

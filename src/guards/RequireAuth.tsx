@@ -1,22 +1,20 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { Spinner } from '../components/Spinner';
 
 interface RequireAuthProps {
   children: React.ReactNode;
-  role?: string;
+  role?: 'admin' | 'employer' | 'employee';
 }
 
 export default function RequireAuth({ children, role }: RequireAuthProps) {
-  const { user, role: userRole, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner size="lg" />
       </div>
     );
   }
@@ -26,9 +24,9 @@ export default function RequireAuth({ children, role }: RequireAuthProps) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (role && userRole !== role) {
+  if (role && user.role !== role) {
     // Redirect to appropriate dashboard based on role
-    return <Navigate to={`/${userRole?.toLowerCase()}/dashboard`} replace />;
+    return <Navigate to={`/${user.role.toLowerCase()}/dashboard`} replace />;
   }
 
   return <>{children}</>;
