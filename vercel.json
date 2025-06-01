@@ -1,11 +1,21 @@
 {
   "rewrites": [
-    { "source": "/admin/**", "destination": "/" },
-    { "source": "/employer/**", "destination": "/" },
-    { "source": "/employee/**", "destination": "/" }
+    { "source": "/admin/(.*)", "destination": "/" },
+    { "source": "/employer/(.*)", "destination": "/" },
+    { "source": "/employee/(.*)", "destination": "/" }
   ],
   "buildCommand": "pnpm build",
-  "outputDirectory": "dist",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
   "framework": "vite",
-  "installCommand": "pnpm install"
+  "outputDirectory": "dist",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ]
 } 
