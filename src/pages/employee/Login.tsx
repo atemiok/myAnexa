@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 
-export function Login() {
+export function EmployeeLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -17,8 +17,11 @@ export function Login() {
     setIsLoading(true);
 
     try {
-      const { role } = await login(email, password);
-      const from = location.state?.from?.pathname || `/${role.toLowerCase()}/dashboard`;
+      const result = await login(email, password);
+      if (result?.role !== 'employee') {
+        throw new Error('Invalid credentials for employee login');
+      }
+      const from = location.state?.from?.pathname || '/employee/dashboard';
       navigate(from, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to login');
@@ -32,8 +35,11 @@ export function Login() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Employee Login
           </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Sign in to access your wage advance requests and history
+          </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
