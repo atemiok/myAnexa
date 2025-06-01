@@ -1,54 +1,59 @@
-import React from 'react';
-import { useRouteError, isRouteErrorResponse, Link } from 'react-router-dom';
+import { useRouteError, isRouteErrorResponse, useNavigate } from 'react-router-dom';
+
+interface ErrorWithStatus {
+  status?: number;
+  statusText?: string;
+  data?: {
+    message?: string;
+  };
+}
 
 export function ErrorBoundary() {
-  const error = useRouteError();
+  const error = useRouteError() as ErrorWithStatus;
+  const navigate = useNavigate();
+
+  let errorMessage: string;
+  let errorTitle: string;
 
   if (isRouteErrorResponse(error)) {
-    if (error.status === 404) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-          <div className="text-center">
-            <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
-            <p className="text-xl text-gray-600 mb-8">Page not found</p>
-            <Link
-              to="/"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-            >
-              Go back home
-            </Link>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <h1 className="text-6xl font-bold text-gray-900 mb-4">{error.status}</h1>
-          <p className="text-xl text-gray-600 mb-8">{error.statusText}</p>
-          <Link
-            to="/"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-          >
-            Go back home
-          </Link>
-        </div>
-      </div>
-    );
+    errorTitle = error.statusText || 'Page Not Found';
+    errorMessage = error.data?.message || 'The page you are looking for does not exist.';
+  } else if (error instanceof Error) {
+    errorTitle = 'Application Error';
+    errorMessage = error.message;
+  } else {
+    errorTitle = 'Unexpected Error';
+    errorMessage = 'An unexpected error occurred. Please try again later.';
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-6xl font-bold text-gray-900 mb-4">Oops!</h1>
-        <p className="text-xl text-gray-600 mb-8">Something went wrong</p>
-        <Link
-          to="/"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-        >
-          Go back home
-        </Link>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 text-center">
+        <div>
+          <h1 className="text-6xl font-extrabold text-gray-900 mb-4">
+            {error.status || 'Oops!'}
+          </h1>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            {errorTitle}
+          </h2>
+          <p className="text-gray-600 mb-8">
+            {errorMessage}
+          </p>
+        </div>
+        <div className="space-y-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Go Back
+          </button>
+          <button
+            onClick={() => navigate('/')}
+            className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Go to Home
+          </button>
+        </div>
       </div>
     </div>
   );
