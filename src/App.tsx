@@ -1,1 +1,11 @@
-export default () => <div className="h-screen flex items-center justify-center text-3xl">myAnexa scaffold ready 🚀</div>; 
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes';
+import { ErrorBoundary } from './components/ErrorBoundary';
+
+export function App() {
+  return (
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  );
+} 

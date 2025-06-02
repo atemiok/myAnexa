@@ -1,3 +1,4 @@
+import { Component, ReactNode } from 'react';
 import { useRouteError, isRouteErrorResponse, useNavigate } from 'react-router-dom';
 
 interface ErrorWithStatus {
@@ -8,17 +9,47 @@ interface ErrorWithStatus {
   };
 }
 
-export function ErrorBoundary() {
-  const error = useRouteError() as ErrorWithStatus;
+interface Props {
+  children: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error: Error | null;
+}
+
+export class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <ErrorFallback error={this.state.error} />;
+    }
+
+    return this.props.children;
+  }
+}
+
+function ErrorFallback({ error }: { error: Error | null }) {
   const navigate = useNavigate();
+  const routeError = useRouteError() as ErrorWithStatus;
 
   let errorMessage: string;
   let errorTitle: string;
+  let status: number | string = 'Oops!';
 
-  if (isRouteErrorResponse(error)) {
-    errorTitle = error.statusText || 'Page Not Found';
-    errorMessage = error.data?.message || 'The page you are looking for does not exist.';
-  } else if (error instanceof Error) {
+  if (isRouteErrorResponse(routeError)) {
+    status = routeError.status;
+    errorTitle = routeError.statusText || 'Page Not Found';
+    errorMessage = routeError.data?.message || 'The page you are looking for does not exist.';
+  } else if (error) {
     errorTitle = 'Application Error';
     errorMessage = error.message;
   } else {
@@ -31,7 +62,7 @@ export function ErrorBoundary() {
       <div className="max-w-md w-full space-y-8 text-center">
         <div>
           <h1 className="text-6xl font-extrabold text-gray-900 mb-4">
-            {error.status || 'Oops!'}
+            {status}
           </h1>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             {errorTitle}
