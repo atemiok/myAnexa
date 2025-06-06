@@ -47,7 +47,7 @@ export function useAuth() {
         await fetchUserProfile(session.user.id);
       } else if (event === 'SIGNED_OUT') {
         setState({ user: null, role: null, isLoading: false, error: null });
-        navigate('/login');
+        navigate('/');
       }
     });
 
@@ -89,30 +89,6 @@ export function useAuth() {
     }
   };
 
-  const login = async (email: string, password: string) => {
-    try {
-      setState(prev => ({ ...prev, isLoading: true, error: null }));
-      const { data, error } = await db.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-
-      if (data.session) {
-        await fetchUserProfile(data.session.user.id);
-        return { role: data.session.user.user_metadata.role };
-      }
-    } catch (err) {
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: err instanceof Error ? err : new Error('Login failed'),
-      }));
-      throw err;
-    }
-  };
-
   const logout = async () => {
     try {
       const { error } = await db.auth.signOut();
@@ -136,7 +112,6 @@ export function useAuth() {
 
   return {
     ...state,
-    login,
     logout,
     hasRole,
   };

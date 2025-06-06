@@ -18,7 +18,9 @@ export function Sidebar({ items }: SidebarProps) {
   const userRole = role || '';
   const location = useLocation();
 
-  const filteredItems = items.filter(item => item.roles.includes(userRole));
+  const filteredItems = userRole
+    ? items.filter(item => item.roles.includes(userRole))
+    : items;
 
   return (
     <div className="w-64 bg-white border-r border-gray-200 h-screen">

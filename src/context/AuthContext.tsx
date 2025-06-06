@@ -6,7 +6,6 @@ interface AuthContextType {
   user: User | null;
   role: string | null;
   companyId: string | null;
-  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -45,18 +44,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const { error } = await db.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-  };
-
   const logout = async () => {
     const { error } = await db.auth.signOut();
     if (error) throw error;
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, companyId, login, logout }}>
+    <AuthContext.Provider value={{ user, role, companyId, logout }}>
       {children}
     </AuthContext.Provider>
   );
