@@ -7,8 +7,8 @@ const TABS = [
 ];
 
 const EMAIL_TEMPLATES = [
-  { label: 'Account Made', value: 'account_made', content: `Hi [Client Name],\n\nYour account has been created at Wagelyft.\n\nYour password is: [Password]\n\nhttp://wagelyft.co/employer-login\n\nRegards,  \nTeam Wagelyft` },
-  { label: 'Employee Account Made', value: 'employee_account_made', content: 'Hi [Employee],\n\nYour employee account has been created.\n\nRegards,\nTeam Wagelyft' },
+  { label: 'Account Made', value: 'account_made', content: `Hi [Client Name],\n\nYour account has been created at MyAnexa.\n\nYour password is: [Password]\n\nhttp://myanexa.co/employer-login\n\nRegards,  \nTeam MyAnexa` },
+  { label: 'Employee Account Made', value: 'employee_account_made', content: 'Hi [Employee],\n\nYour employee account has been created.\n\nRegards,\nTeam MyAnexa' },
   { label: 'Email Changed', value: 'email_changed', content: 'Hi [User],\n\nYour email has been changed.\n\nIf this was not you, please contact support.' },
   { label: 'Account Verification', value: 'account_verification', content: 'Hi [User],\n\nPlease verify your account using the link below.' },
   { label: 'Documents Upload', value: 'documents_upload', content: 'Hi [User],\n\nYour documents have been uploaded.' },
@@ -82,8 +82,15 @@ export function Settings() {
   const [followupReminders, setFollowupReminders] = useState(false);
   const [employeeLoansMax, setEmployeeLoansMax] = useState(300000);
   const [transactionFee, setTransactionFee] = useState(2);
-  const [emailTemplate, setEmailTemplate] = useState(EMAIL_TEMPLATES[0].value);
-  const [emailContent, setEmailContent] = useState(EMAIL_TEMPLATES[0].content);
+  const [emailTemplate, setEmailTemplate] = useState('');
+  const [emailContent, setEmailContent] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [companyEmail, setCompanyEmail] = useState('');
+  const [companyPhone, setCompanyPhone] = useState('');
+  const [companyAddress, setCompanyAddress] = useState('');
+  const [defaultCurrency, setDefaultCurrency] = useState('USD');
+  const [timeZone, setTimeZone] = useState('UTC');
+  const [dateFormat, setDateFormat] = useState('MM/DD/YYYY');
 
   // Services toggles
   const [salaryAdvance, setSalaryAdvance] = useState(true);
@@ -93,10 +100,9 @@ export function Settings() {
   const [employeeLoans, setEmployeeLoans] = useState(true);
 
   // Handle email template change
-  function handleTemplateChange(val: string) {
-    setEmailTemplate(val);
-    const found = EMAIL_TEMPLATES.find(t => t.value === val);
-    setEmailContent(found ? found.content : '');
+  function handleTemplateChange(templateValue: string, content: string) {
+    setEmailTemplate(templateValue);
+    setEmailContent(content);
   }
 
   return (
@@ -114,69 +120,355 @@ export function Settings() {
       </div>
       {tab === 'general' && (
         <div className="space-y-8 max-w-2xl mx-auto">
-          {/* General Settings */}
-          <div className="bg-white rounded-xl shadow p-6 space-y-4">
-            <h2 className="text-lg font-bold text-gray-800 mb-2">General Settings</h2>
-            <Switch checked={notifySignup} onChange={setNotifySignup} label="Notify when a company signs up" />
-            <Switch checked={notifyDocs} onChange={setNotifyDocs} label="Notify when a company uploads documents" />
-            <Switch checked={monthlyReports} onChange={setMonthlyReports} label="Receive Monthly Reports on Email" />
-            <Switch checked={followupReminders} onChange={setFollowupReminders} label="Receive follow-up reminders" />
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">Company Information</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Company Name</label>
+                    <input
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
           </div>
-          {/* Employee Loans Max */}
-          <div className="bg-white rounded-xl shadow p-6 space-y-2">
-            <h2 className="text-lg font-bold text-gray-800 mb-2">Employee Loans Max</h2>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Amount (KSh)</label>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Company Email</label>
             <input
-              type="number"
-              className="w-40 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
-              value={employeeLoansMax}
-              min={0}
-              onChange={e => setEmployeeLoansMax(Number(e.target.value))}
+                      type="email"
+                      value={companyEmail}
+                      onChange={(e) => setCompanyEmail(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
-          {/* Service Rates */}
-          <div className="bg-white rounded-xl shadow p-6 space-y-2">
-            <h2 className="text-lg font-bold text-gray-800 mb-2">Service Rates</h2>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Transaction Fee (%)</label>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Company Phone</label>
             <input
-              type="number"
-              className="w-32 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
-              value={transactionFee}
-              min={0}
-              step={0.01}
-              onChange={e => setTransactionFee(Number(e.target.value))}
+                      type="tel"
+                      value={companyPhone}
+                      onChange={(e) => setCompanyPhone(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Company Address</label>
+                    <textarea
+                      value={companyAddress}
+                      onChange={(e) => setCompanyAddress(e.target.value)}
+                      rows={3}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
-          {/* Email Templates */}
-          <div className="bg-white rounded-xl shadow p-6 space-y-2">
-            <h2 className="text-lg font-bold text-gray-800 mb-2">Email Templates</h2>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Select Template</label>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">System Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Default Currency</label>
+                    <select
+                      value={defaultCurrency}
+                      onChange={(e) => setDefaultCurrency(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    >
+                      <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                      <option value="GBP">GBP</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Time Zone</label>
+                    <select
+                      value={timeZone}
+                      onChange={(e) => setTimeZone(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    >
+                      <option value="UTC">UTC</option>
+                      <option value="EST">EST</option>
+                      <option value="PST">PST</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Date Format</label>
             <select
-              className="w-60 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm mb-2"
-              value={emailTemplate}
-              onChange={e => handleTemplateChange(e.target.value)}
-            >
-              {EMAIL_TEMPLATES.map(t => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
+                      value={dateFormat}
+                      onChange={(e) => setDateFormat(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    >
+                      <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                      <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                      <option value="YYYY-MM-DD">YYYY-MM-DD</option>
             </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Email Templates</h3>
+              <div className="space-y-4">
+                {EMAIL_TEMPLATES.map((template) => (
+                  <div key={template.value} className="border rounded-lg p-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {template.label}
+                    </label>
             <textarea
-              className="w-full min-h-[120px] px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm font-mono"
-              value={emailContent}
-              onChange={e => setEmailContent(e.target.value)}
-            />
+                      value={template.content}
+                      onChange={(e) => handleTemplateChange(template.value, e.target.value)}
+                      rows={4}
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
       {tab === 'services' && (
         <div className="space-y-8 max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl shadow p-6 space-y-4">
-            <h2 className="text-lg font-bold text-gray-800 mb-2">Toggle Services Globally</h2>
-            <Switch checked={salaryAdvance} onChange={setSalaryAdvance} label="Salary Advance" />
-            <Switch checked={paybill} onChange={setPaybill} label="Pay Bill / Buy Goods" />
-            <Switch checked={earlyRepayment} onChange={setEarlyRepayment} label="Early Advance Repayment" />
-            <Switch checked={wallet} onChange={setWallet} label="Wagelyft Wallet" />
-            <Switch checked={employeeLoans} onChange={setEmployeeLoans} label="Employee Loans" />
+          <div className="bg-white rounded-xl shadow p-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-gray-800">Service Management</h2>
+                <p className="text-sm text-gray-500 mt-1">Configure and manage available services for your organization</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Reset to Default
+                </button>
+                <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              {/* Salary Advance Service */}
+              <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Salary Advance</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Allow employees to request salary advances before their payday. Configure limits and approval workflows.
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-500">Status: <span className={`font-medium ${salaryAdvance ? 'text-green-600' : 'text-red-600'}`}>{salaryAdvance ? 'Active' : 'Disabled'}</span></span>
+                      <Switch checked={salaryAdvance} onChange={setSalaryAdvance} />
+                    </div>
+                  </div>
+                  {salaryAdvance && (
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Maximum Advance Amount</label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                          placeholder="Enter amount"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Processing Fee (%)</label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                          placeholder="Enter percentage"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Pay Bill Service */}
+              <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Pay Bill / Buy Goods</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Enable employees to pay bills and make purchases directly through the platform.
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-500">Status: <span className={`font-medium ${paybill ? 'text-green-600' : 'text-red-600'}`}>{paybill ? 'Active' : 'Disabled'}</span></span>
+                      <Switch checked={paybill} onChange={setPaybill} />
+                    </div>
+                  </div>
+                  {paybill && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Transaction Fee (%)</label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                        placeholder="Enter percentage"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Early Repayment Service */}
+              <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Early Advance Repayment</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Allow employees to repay their advances before the due date with adjusted interest rates.
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-500">Status: <span className={`font-medium ${earlyRepayment ? 'text-green-600' : 'text-red-600'}`}>{earlyRepayment ? 'Active' : 'Disabled'}</span></span>
+                      <Switch checked={earlyRepayment} onChange={setEarlyRepayment} />
+                    </div>
+                  </div>
+                  {earlyRepayment && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Early Repayment Discount (%)</label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                        placeholder="Enter discount percentage"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Wallet Service */}
+              <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Wagelyft Wallet</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Provide employees with a digital wallet for managing their finances and transactions.
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-500">Status: <span className={`font-medium ${wallet ? 'text-green-600' : 'text-red-600'}`}>{wallet ? 'Active' : 'Disabled'}</span></span>
+                      <Switch checked={wallet} onChange={setWallet} />
+                    </div>
+                  </div>
+                  {wallet && (
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Minimum Balance</label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                          placeholder="Enter amount"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Transaction Limit</label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                          placeholder="Enter amount"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Employee Loans Service */}
+              <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Employee Loans</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Enable long-term loan facilities for employees with customizable terms and conditions.
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-500">Status: <span className={`font-medium ${employeeLoans ? 'text-green-600' : 'text-red-600'}`}>{employeeLoans ? 'Active' : 'Disabled'}</span></span>
+                      <Switch checked={employeeLoans} onChange={setEmployeeLoans} />
+                    </div>
+                  </div>
+                  {employeeLoans && (
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Maximum Loan Amount</label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                          placeholder="Enter amount"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm"
+                          placeholder="Enter percentage"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900">Service Status</h3>
+                  <p className="text-sm text-gray-500">Last updated: {new Date().toLocaleString()}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Active
+                  </span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {Object.values({ salaryAdvance, paybill, earlyRepayment, wallet, employeeLoans }).filter(Boolean).length} Services Enabled
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

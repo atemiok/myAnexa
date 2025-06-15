@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type StatusVariant = 'info' | 'success' | 'warning' | 'error';
 export type Status = 'active' | 'pending' | 'suspended' | 'completed' | 'rejected' | 'unpaid' | 'paid' | 'late' | 'partial' | 'bad_debt' | 'approved';
 
@@ -35,10 +37,10 @@ const statusLabels: Record<Status, string> = {
 };
 
 const variantStyles: Record<StatusVariant, string> = {
-  info: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  success: 'bg-green-50 text-green-700 ring-green-600/20',
-  warning: 'bg-yellow-50 text-yellow-700 ring-yellow-600/20',
-  error: 'bg-red-50 text-red-700 ring-red-600/20',
+  info: 'bg-info/10 text-info ring-info/20',
+  success: 'bg-success/10 text-success ring-success/20',
+  warning: 'bg-warning/10 text-warning ring-warning/20',
+  error: 'bg-error/10 text-error ring-error/20',
 };
 
 export function StatusPill({ status, children }: StatusPillProps) {
@@ -47,7 +49,7 @@ export function StatusPill({ status, children }: StatusPillProps) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${variantStyles[variant]}`}
+      className={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium ring-1 ring-inset transition-all duration-200 ${variantStyles[variant]}`}
     >
       {label}
     </span>

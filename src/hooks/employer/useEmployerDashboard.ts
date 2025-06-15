@@ -3,6 +3,9 @@ import { db } from '../../api/supa';
 
 export interface DashboardMetrics {
   totalEmployees: number;
+  activeEmployees: number;
+  inactiveEmployees: number;
+  totalRequests: number;
   activeRequests: number;
   pendingApprovals: number;
   totalFinanced: number;
@@ -44,6 +47,9 @@ export function useEmployerDashboard() {
         return {
           metrics: {
             totalEmployees: 45,
+            activeEmployees: 40,
+            inactiveEmployees: 5,
+            totalRequests: 156,
             activeRequests: 12,
             pendingApprovals: 5,
             totalFinanced: 75000,
@@ -100,6 +106,22 @@ export function useEmployerDashboard() {
               amount: 2000,
               status: 'pending',
               requestDate: '2024-03-13',
+            },
+            {
+              id: 'req-4',
+              employeeName: 'Sarah Wilson',
+              type: 'loan',
+              amount: 3000,
+              status: 'approved',
+              requestDate: '2024-03-12',
+            },
+            {
+              id: 'req-5',
+              employeeName: 'David Brown',
+              type: 'advance',
+              amount: 1500,
+              status: 'declined',
+              requestDate: '2024-03-11',
             },
           ],
         };

@@ -5,6 +5,7 @@ import { EmployerLayout } from './layouts/EmployerLayout';
 import { Dashboard as EmployeeDashboard, RequestAdvance, History, Documents, Settings } from './employee';
 import { Dashboard as AdminDashboard } from './pages/admin/Dashboard';
 import { Companies, LoanRequests, Invoices, ChangeRequests, Settings as AdminSettings } from './pages/admin';
+import Transactions from './pages/admin/Transactions.jsx';
 import { Dashboard as EmployerDashboard } from './pages/employer/Dashboard';
 import { Requests, EmployeeList, PayrollFinancing, Invoices as EmployerInvoices, Settings as EmployerSettings } from './pages/employer';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
       { path: 'companies', element: <Companies /> },
       { path: 'loan-requests', element: <LoanRequests /> },
       { path: 'invoices', element: <Invoices /> },
+      { path: 'transactions', element: <Transactions /> },
       { path: 'change-requests', element: <ChangeRequests /> },
       { path: 'settings', element: <AdminSettings /> },
     ],

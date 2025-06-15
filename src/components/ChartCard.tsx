@@ -1,7 +1,6 @@
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
+import React from 'react';
 import { Pie, Line, Bar, Doughnut } from 'react-chartjs-2';
-
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement);
+import type { ChartOptions } from 'chart.js';
 
 interface ChartCardProps {
   title: string;
@@ -11,13 +10,40 @@ interface ChartCardProps {
 }
 
 export function ChartCard({ title, subtitle, data, type }: ChartCardProps) {
-  const chartOptions = {
+  const chartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'bottom' as const,
+        labels: {
+          padding: 20,
+          font: {
+            size: 12,
+            family: 'Inter, system-ui, sans-serif',
+          },
+          color: 'var(--color-neutral-700)',
+        },
       },
+      tooltip: {
+        backgroundColor: 'var(--color-neutral-800)',
+        titleFont: {
+          size: 14,
+          family: 'Inter, system-ui, sans-serif',
+        },
+        bodyFont: {
+          size: 13,
+          family: 'Inter, system-ui, sans-serif',
+        },
+        padding: 12,
+        cornerRadius: 8,
+        displayColors: true,
+        boxPadding: 4,
+      },
+    },
+    animation: {
+      duration: 750,
+      easing: 'easeInOutQuad',
     },
   };
 
@@ -37,12 +63,14 @@ export function ChartCard({ title, subtitle, data, type }: ChartCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <div className="px-4 py-5 sm:px-6">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">{title}</h3>
-        {subtitle && <p className="mt-1 text-sm text-gray-500">{subtitle}</p>}
+    <div className="card animate-fade-in">
+      <div className="card-header">
+        <h3 className="text-lg font-semibold text-neutral-900">{title}</h3>
+        {subtitle && <p className="mt-1 text-sm text-neutral-500">{subtitle}</p>}
       </div>
-      <div className="px-4 py-5 sm:p-6 h-80">{renderChart()}</div>
+      <div className="card-body h-80 transition-all duration-200 hover:shadow-lg">
+        {renderChart()}
+      </div>
     </div>
   );
 } 

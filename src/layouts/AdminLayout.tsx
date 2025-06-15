@@ -7,6 +7,7 @@ import {
   DocumentTextIcon,
   ArrowPathIcon,
   Cog6ToothIcon,
+  WalletIcon,
 } from '@heroicons/react/24/outline';
 
 const routes = [
@@ -14,6 +15,7 @@ const routes = [
   { path: '/admin/companies', label: 'Companies', icon: BuildingOfficeIcon, roles: ['admin'] },
   { path: '/admin/loan-requests', label: 'Loan Requests', icon: ClipboardDocumentListIcon, roles: ['admin'] },
   { path: '/admin/invoices', label: 'Invoices', icon: DocumentTextIcon, roles: ['admin'] },
+  { path: '/admin/transactions', label: 'Transactions', icon: WalletIcon, roles: ['admin'] },
   { path: '/admin/change-requests', label: 'Change Requests', icon: ArrowPathIcon, roles: ['admin'] },
   { path: '/admin/settings', label: 'Settings', icon: Cog6ToothIcon, roles: ['admin'] },
 ];
